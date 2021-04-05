@@ -34,9 +34,9 @@
 
     $plugin             = new stdClass();
 
-    $plugin->version    = 2021040501; 
+    $plugin->version    = 2021040502; 
     $plugin->requires   = 2017111300;
-    $plugin->release    = 2021040501;
+    $plugin->release    = 2021040502;
     $plugin->component  = 'local_batchgroup';
     $plugin->cron       = 0;
     $plugin->maturity   = MATURITY_ALPHA;

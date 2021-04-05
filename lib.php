@@ -106,7 +106,7 @@
         /**
          * const string    Form id for role_id.
          */
-        const FORMID_ROLE_ID              = 'role_id';
+        /*const FORMID_ROLE_ID              = 'role_id';*/
 
         /**
          * const string    Form id for user_id (key field to match).
@@ -198,7 +198,7 @@
          *
          * @uses $DB
          */
-        public static function import_file(stdClass $course, $ident_field, $role_id, $group_assign, $group_id, $group_create, stored_file $import_file)
+        public static function import_file(stdClass $course, $ident_field, /*$role_id,*/ $group_assign, $group_id, $group_create, stored_file $import_file)
         {
             global $DB;
 
@@ -254,14 +254,6 @@
                     break;
                 }
             }
-
-            // Get an instance of the enrol_manual_plugin (not to be confused
-            // with the enrol_instance arg)
-           /* $manual_enrol_plugin = enrol_get_plugin('manual');
-
-            $user_rec     =
-            $new_group    =
-            $new_grouping = null;*/
 
             // Open and fetch the file contents
             $fh = $import_file->get_content_file_handle();
@@ -331,7 +323,8 @@
                     $assign_group_name = $selected_group->name;
 
                 } else {
-
+					
+					//create groups
                     foreach($existing_groups as $existing_group) {
                         if ($existing_group->name != $group_name)
                             continue;
@@ -344,7 +337,10 @@
                     if ($assign_group_id == 0) {
 
                         // Can not create one, next line
-                        if (!$group_create) continue;
+                        if (!$group_create) {
+							$result .= sprintf(get_string('ERR_CREATE_GROUP2', self::PLUGIN_NAME), $line_num, $group_name);
+							continue;
+						}
 
                         // Make a new group for this course
                         $new_group = new stdClass();
@@ -382,7 +378,7 @@
 
             fclose($fh);
 
-            return (empty($result)) ? get_string('INF_IMPORT_SUCCESS', self::PLUGIN_NAME) : $result;
+            return (empty($result)) ? get_string('INF_IMPORT_SUCCESS', self::PLUGIN_NAME) : $result .= sprintf(get_string('ERR_CONTINUE_MSG', self::PLUGIN_NAME));
 
         } // import_file
 

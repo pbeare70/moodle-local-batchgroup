@@ -136,7 +136,7 @@
         
         
         //process form date via lib.php
-        $result = local_batchgroup_plugin::import_file($COURSE, $user_id_field, $role_id, $canmanagegroups ?
+        $result = local_batchgroup_plugin::import_file($COURSE, $user_id_field, /*$role_id,*/ $canmanagegroups ?
             (boolean)$group_assign : false, $group_id, (boolean)$group_create, array_shift($area_files));
 
         // Clean up the file area
