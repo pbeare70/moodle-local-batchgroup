@@ -257,11 +257,11 @@
 
             // Get an instance of the enrol_manual_plugin (not to be confused
             // with the enrol_instance arg)
-            $manual_enrol_plugin = enrol_get_plugin('manual');
+           /* $manual_enrol_plugin = enrol_get_plugin('manual');
 
             $user_rec     =
             $new_group    =
-            $new_grouping = null;
+            $new_grouping = null;*/
 
             // Open and fetch the file contents
             $fh = $import_file->get_content_file_handle();
@@ -313,12 +313,13 @@
                 // If a user has a role in this course, then we leave it alone and move on
                 // to the group assignment if there is one. If they have no role, then we
                 // should go ahead and add one, as long as it is not a metacourse.
-                if (!$roles && $role_id > 0) {
+                /*if (!$roles && $role_id > 0) {
                     if ($metacourse) {
                         $result .= sprintf(get_string('ERR_ENROLL_META', self::PLUGIN_NAME), $line_num, $ident_value);
                     } else {
                         try {
-                            $manual_enrol_plugin->enrol_user($enrol_instance, $user_rec->id, $role_id);
+                            //$manual_enrol_plugin->enrol_user($enrol_instance, $user_rec->id, $role_id);
+                            $result .= sprintf(get_string('ERR_ENROLL_FAILED2', self::PLUGIN_NAME), $line_num, $ident_value);
                         }
                         catch (Exception $exc) {
                             $result .= sprintf(get_string('ERR_ENROLL_FAILED', self::PLUGIN_NAME), $line_num, $ident_value);
@@ -326,6 +327,13 @@
                             continue;
                         }
                     }
+                }*/
+                
+                
+                if (!$roles) {
+                                  
+                $result .= sprintf(get_string('ERR_ENROLL_FAILED2', self::PLUGIN_NAME), $line_num, $ident_value);
+                        
                 }
 
                 // If no group assignments, or group is from file, but no
