@@ -34,9 +34,9 @@
 
     $plugin             = new stdClass();
 
-    $plugin->version    = 2021040102; // Plugin created on 1st April 2021, no joke.
+    $plugin->version    = 2021040501; 
     $plugin->requires   = 2017111300;
-    $plugin->release    = "0.1.1";
+    $plugin->release    = 2021040501;
     $plugin->component  = 'local_batchgroup';
     $plugin->cron       = 0;
     $plugin->maturity   = MATURITY_ALPHA;

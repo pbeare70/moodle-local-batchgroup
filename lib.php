@@ -314,7 +314,7 @@
                 // If they have no role, we add an error to the result output                
                 
                 if (!$roles) { // if $roles is false
-                $result .= sprintf(get_string('ERR_ENROLL_FAILED2', self::PLUGIN_NAME), $line_num, $ident_value);
+                $result .= sprintf(get_string('ERR_NOT_ENROLLED_FAILED', self::PLUGIN_NAME), $line_num, $ident_value);
                 }
 
                 // If no group assignments, or group is from file, but no

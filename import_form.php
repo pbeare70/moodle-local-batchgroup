@@ -65,21 +65,6 @@
             $this->_form->setDefault(local_batchgroup_plugin::FORMID_USER_ID_FIELD, local_batchgroup_plugin::DEFAULT_USER_ID_FIELD);
             $this->_form->addHelpButton(local_batchgroup_plugin::FORMID_USER_ID_FIELD, 'LBL_USER_ID_FIELD', local_batchgroup_plugin::PLUGIN_NAME);
 
-
-            //$this->_form->addElement('header', 'identity', get_string('LBL_ENROLL_OPTIONS', local_batchgroup_plugin::PLUGIN_NAME));
-
-            // The role id drop down list. The get_assignable_roles returns an assoc. array
-            // with integer keys (role id) and role name values, so it looks like a sparse
-            // array. The php array functions tend to reorder the keys to remove the perceived
-            // gaps, so have to merge manually with the 0 option.
-            //$roles = HTML_QuickForm::arrayMerge(array(0 => get_string('LBL_NO_ROLE_ID', local_batchgroup_plugin::PLUGIN_NAME)),
-            //                                    get_assignable_roles($this->_customdata['data']->context, ROLENAME_BOTH));
-            //$this->_form->addElement('hidden', local_batchgroup_plugin::FORMID_ROLE_ID, get_string('LBL_ROLE_ID', local_batchgroup_plugin::PLUGIN_NAME), $roles); //form element edited to be hidden, may remove in later versions
-            //$this->_form->setDefault(local_batchgroup_plugin::FORMID_ROLE_ID, $this->_customdata['data']->default_role_id);
-            //$this->_form->addHelpButton(local_batchgroup_plugin::FORMID_ROLE_ID, 'LBL_ROLE_ID', local_batchgroup_plugin::PLUGIN_NAME);
-            //$this->_form->disabledIf(local_batchgroup_plugin::FORMID_ROLE_ID, local_batchgroup_plugin::FORMID_METACOURSE, 'eq', '1');
-
-
             // Conditionally based on user capability
             if ($this->_customdata['data']->canmanagegroups) {
 
@@ -143,15 +128,7 @@
                 $result[local_batchgroup_plugin::FORMID_USER_ID_FIELD] = get_string('invaliduserfield', 'error', $data[local_batchgroup_plugin::FORMID_USER_ID_FIELD]);
             }
 
-            // Into which role to put the imported users, has
-            // to be one valid for the current user.
-            //$role_id = empty($data[local_batchgroup_plugin::FORMID_ROLE_ID])
-            //         ? 0 : intval($data[local_batchgroup_plugin::FORMID_ROLE_ID]);
-            //if ($role_id > 0 && !array_key_exists($role_id, get_assignable_roles($this->_customdata['data']->context, ROLENAME_BOTH))) {
-            //    $result[local_batchgroup_plugin::FORMID_ROLE_ID] = get_string('invalidroleid', 'error');
-            //}
-
-            // For Yes/No select 1 and 0 only, anything else not valid
+ 
             $group_assign = empty($data[local_batchgroup_plugin::FORMID_GROUP])
                           ? 0 : intval($data[local_batchgroup_plugin::FORMID_GROUP]);
             if ($group_assign < 0 or $group_assign > 1) {
