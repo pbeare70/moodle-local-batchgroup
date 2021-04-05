@@ -198,7 +198,7 @@
          *
          * @uses $DB
          */
-        public static function import_file(stdClass $course, /*stdClass $enrol_instance,*/ $ident_field, $role_id, $group_assign, $group_id, $group_create, stored_file $import_file)
+        public static function import_file(stdClass $course, $ident_field, $role_id, $group_assign, $group_id, $group_create, stored_file $import_file)
         {
             global $DB;
 
@@ -311,29 +311,10 @@
                 // Fetch all the role assignments this user might have for this course's context
                 $roles = get_user_roles($course_context, $user_rec->id, false);
                 // If a user has a role in this course, then we leave it alone and move on
-                // to the group assignment if there is one. If they have no role, then we
-                // should go ahead and add one, as long as it is not a metacourse.
-                /*if (!$roles && $role_id > 0) {
-                    if ($metacourse) {
-                        $result .= sprintf(get_string('ERR_ENROLL_META', self::PLUGIN_NAME), $line_num, $ident_value);
-                    } else {
-                        try {
-                            //$manual_enrol_plugin->enrol_user($enrol_instance, $user_rec->id, $role_id);
-                            $result .= sprintf(get_string('ERR_ENROLL_FAILED2', self::PLUGIN_NAME), $line_num, $ident_value);
-                        }
-                        catch (Exception $exc) {
-                            $result .= sprintf(get_string('ERR_ENROLL_FAILED', self::PLUGIN_NAME), $line_num, $ident_value);
-                            $result .= $exc->getMessage();
-                            continue;
-                        }
-                    }
-                }*/
+                // If they have no role, we add an error to the result output                
                 
-                
-                if (!$roles) {
-                                  
+                if (!$roles) { // if $roles is false
                 $result .= sprintf(get_string('ERR_ENROLL_FAILED2', self::PLUGIN_NAME), $line_num, $ident_value);
-                        
                 }
 
                 // If no group assignments, or group is from file, but no
