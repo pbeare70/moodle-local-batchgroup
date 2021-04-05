@@ -198,7 +198,7 @@
          *
          * @uses $DB
          */
-        public static function import_file(stdClass $course, stdClass $enrol_instance, $ident_field, $role_id, $group_assign, $group_id, $group_create, stored_file $import_file)
+        public static function import_file(stdClass $course, /*stdClass $enrol_instance,*/ $ident_field, $role_id, $group_assign, $group_id, $group_create, stored_file $import_file)
         {
             global $DB;
 

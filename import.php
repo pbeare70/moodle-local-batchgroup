@@ -43,7 +43,7 @@
     require_login($course_id);
     // $PAGE, $USER, $COURSE, and other globals now set
     // up, check the capabilities
-    require_capability('enrol/manual:enrol', $PAGE->context);
+    //require_capability('enrol/manual:enrol', $PAGE->context); //pb comment out
     // Determine if they can manage groups
     $canmanagegroups = has_capability('moodle/course:managegroups', $PAGE->context);
 
@@ -72,12 +72,12 @@
     $data->user_id_field_options
                             = local_batchgroup_plugin::get_user_id_field_options();
     $data->metacourse       = false;
-    $data->default_role_id  = 0;
+    //$data->default_role_id  = 0; // pb comment out
     $data->canmanagegroups  = $canmanagegroups;
 
     // Iterate the list of active enrol plugins looking for
     // the manual course plugin, deal breaker if not found
-    $manual_enrol_instance = null;
+   /* $manual_enrol_instance = null;
     $enrols_enabled = enrol_get_instances($COURSE->id, true);
     foreach($enrols_enabled as $enrol) {
         if ($enrol->enrol == 'manual') {
@@ -89,7 +89,7 @@
     // Deal breaker
     if (null == $manual_enrol_instance) {
         print_error('ERR_NO_MANUAL_ENROL', local_batchgroup_plugin::PLUGIN_NAME, $course_url);
-    }
+    }*/ //pb comment out
 
     // Iterate the list of active enrol plugins looking for
     // the meta course plugin
@@ -141,9 +141,9 @@
         // Collect the input
         $user_id_field  = empty($formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD})
                         ? '' : $formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD};
-        $role_id        = $data->metacourse
+        /*$role_id        = $data->metacourse
                         ? 0 : (empty($formdata->{local_batchgroup_plugin::FORMID_ROLE_ID})
-                               ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_ROLE_ID}));
+                               ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_ROLE_ID}));*/ //pb commented out
         $group_assign   = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP})
                         ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP});
         $group_id       = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID})
@@ -154,9 +154,15 @@
         // Leave the file in the user's draft area since we
         // will not plan to keep it after processing
         $area_files = get_file_storage()->get_area_files($user_context->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES}, null, false);
-        $result = local_batchgroup_plugin::import_file($COURSE, $manual_enrol_instance,
-            $user_id_field, $role_id, $canmanagegroups ? (boolean)$group_assign : false,
-            $group_id, (boolean)$group_create, array_shift($area_files));
+        
+        
+        //next line does processing?
+        $result = local_batchgroup_plugin::import_file($COURSE, /*$manual_enrol_instance,*/
+            $user_id_field, $role_id, $canmanagegroups ?
+            (boolean)$group_assign : false,
+            $group_id, 
+            (boolean)$group_create, 
+            array_shift($area_files));
 
         // Clean up the file area
         get_file_storage()->delete_area_files($user_context->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES});
