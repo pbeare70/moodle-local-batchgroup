@@ -123,8 +123,8 @@
         // Collect the input
         $user_id_field  = empty($formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD})
                         ? '' : $formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD};
-        $group_assign   = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP})
-                        ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP});
+        /*$group_assign   = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP})
+                        ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP});*/
         $group_id       = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID})
                         ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID});
         $group_create   = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_CREATE})
@@ -136,8 +136,8 @@
         
         
         //process form date via lib.php
-        $result = local_batchgroup_plugin::import_file($COURSE, $user_id_field, /*$role_id,*/ $canmanagegroups ?
-            (boolean)$group_assign : false, $group_id, (boolean)$group_create, array_shift($area_files));
+        $result = local_batchgroup_plugin::import_file($COURSE, $user_id_field, /*$role_id, $canmanagegroups ?
+            (boolean)$group_assign : false,*/ $group_id, (boolean)$group_create, array_shift($area_files));
 
         // Clean up the file area
         get_file_storage()->delete_area_files($user_context->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES});
@@ -147,7 +147,7 @@
 
         // Output the processing result
         echo $OUTPUT->box(nl2br($result));
-        echo $OUTPUT->continue_button($canmanagegroups && $group_assign ? $groups_url : $enrol_url);
+        echo $OUTPUT->continue_button($canmanagegroups /*&& $group_assign */? $groups_url : $enrol_url);
 
         echo $OUTPUT->footer();
 

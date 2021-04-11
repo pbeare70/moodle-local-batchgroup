@@ -71,9 +71,10 @@
                 // Process groups
                 $this->_form->addElement('header', 'identity', get_string('LBL_GROUP_OPTIONS', local_batchgroup_plugin::PLUGIN_NAME)); //section header
 
-                $this->_form->addElement('hidden', local_batchgroup_plugin::FORMID_GROUP, get_string('LBL_GROUP', local_batchgroup_plugin::PLUGIN_NAME)); //Assign to groups option
-                $this->_form->setDefault(local_batchgroup_plugin::FORMID_GROUP, 1); // set to default of yes
-                $this->_form->addHelpButton(local_batchgroup_plugin::FORMID_GROUP, 'LBL_GROUP', local_batchgroup_plugin::PLUGIN_NAME);
+               
+                //$this->_form->addElement('hidden', local_batchgroup_plugin::FORMID_GROUP, get_string('LBL_GROUP', local_batchgroup_plugin::PLUGIN_NAME)); //Assign to groups option
+                //$this->_form->setDefault(local_batchgroup_plugin::FORMID_GROUP, 1); // set to default of yes
+                //$this->_form->addHelpButton(local_batchgroup_plugin::FORMID_GROUP, 'LBL_GROUP', local_batchgroup_plugin::PLUGIN_NAME);
 
                 // Group id selection
                 $groups = array(0 => get_string('LBL_NO_GROUP_ID', local_batchgroup_plugin::PLUGIN_NAME));
@@ -85,13 +86,13 @@
                 $this->_form->addElement('select', local_batchgroup_plugin::FORMID_GROUP_ID, get_string('LBL_GROUP_ID', local_batchgroup_plugin::PLUGIN_NAME), $groups);
                 $this->_form->setDefault(local_batchgroup_plugin::FORMID_GROUP_ID, 0);
                 $this->_form->addHelpButton(local_batchgroup_plugin::FORMID_GROUP_ID, 'LBL_GROUP_ID', local_batchgroup_plugin::PLUGIN_NAME);
-                $this->_form->disabledIf(local_batchgroup_plugin::FORMID_GROUP_ID, local_batchgroup_plugin::FORMID_GROUP, 'eq', '0');
+                //$this->_form->disabledIf(local_batchgroup_plugin::FORMID_GROUP_ID, local_batchgroup_plugin::FORMID_GROUP, 'eq', '0');
 
                 // Create new if needed
                 $this->_form->addElement('selectyesno', local_batchgroup_plugin::FORMID_GROUP_CREATE, get_string('LBL_GROUP_CREATE', local_batchgroup_plugin::PLUGIN_NAME));
                 $this->_form->setDefault(local_batchgroup_plugin::FORMID_GROUP_CREATE, 0);
                 $this->_form->addHelpButton(local_batchgroup_plugin::FORMID_GROUP_CREATE, 'LBL_GROUP_CREATE', local_batchgroup_plugin::PLUGIN_NAME);
-                $this->_form->disabledIf(local_batchgroup_plugin::FORMID_GROUP_CREATE, local_batchgroup_plugin::FORMID_GROUP,    'eq', '0');
+                //$this->_form->disabledIf(local_batchgroup_plugin::FORMID_GROUP_CREATE, local_batchgroup_plugin::FORMID_GROUP,    'eq', '0');
                 $this->_form->disabledIf(local_batchgroup_plugin::FORMID_GROUP_CREATE, local_batchgroup_plugin::FORMID_GROUP_ID, 'gt', '0');
 
             }
@@ -129,25 +130,29 @@
             }
 
  
-            $group_assign = empty($data[local_batchgroup_plugin::FORMID_GROUP])
+            /*$group_assign = empty($data[local_batchgroup_plugin::FORMID_GROUP])
                           ? 0 : intval($data[local_batchgroup_plugin::FORMID_GROUP]);
-            if ($group_assign < 0 or $group_assign > 1) {
+            if (/*$group_assign < 0 or $group_assign > 1) {
                 $result[local_batchgroup_plugin::FORMID_GROUP] = get_string('VAL_INVALID_SELECTION', local_batchgroup_plugin::PLUGIN_NAME);
-            }
+            }*/
 
-            if ($group_assign) {
-                $group_id = empty($data[local_batchgroup_plugin::FORMID_GROUP_ID])
-                          ? 0 : $group_assign ? intval($data[local_batchgroup_plugin::FORMID_GROUP_ID]) : 0;
-            } else {
-                $group_id = 0;
-            }
+            //if ($group_assign) {
+            //$group_id = empty($data[local_batchgroup_plugin::FORMID_GROUP_ID])
+            //            ? 0 : $group_assign ? intval($data[local_userenrols_plugin::FORMID_GROUP_ID]) : 0; //problem line
+            //}
+            //else {
+            //    $group_id = 0;
+            //}
+            
+            $group_id = intval($data[local_batchgroup_plugin::FORMID_GROUP_ID]); //replaced line
             if ($group_id > 0 && !array_key_exists($group_id, groups_get_all_groups($this->_customdata['data']->course->id))) {
                 $group_id = 0;
                 $result[local_batchgroup_plugin::FORMID_GROUP_ID] = get_string('VAL_INVALID_SELECTION', local_batchgroup_plugin::PLUGIN_NAME);
             }
 
             // For Yes/No select 1 and 0 only, anything else not valid
-            if (($group_assign && ($group_id == 0))) {
+            //if (($group_assign && ($group_id == 0))) {
+			if ($group_id == 0){	
                 $group_create = empty($data[local_batchgroup_plugin::FORMID_GROUP_CREATE])
                               ? 0 : $data[local_batchgroup_plugin::FORMID_GROUP_CREATE];
             } else {

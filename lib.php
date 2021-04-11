@@ -116,7 +116,7 @@
         /**
          * const string    Form id for group (whether to assign or not).
          */
-        const FORMID_GROUP                = 'group';
+        //const FORMID_GROUP                = 'group'; //should not be needed
 
         /**
          * const string    Form id for group_id (direct assignment).
@@ -198,7 +198,7 @@
          *
          * @uses $DB
          */
-        public static function import_file(stdClass $course, $ident_field, /*$role_id,*/ $group_assign, $group_id, $group_create, stored_file $import_file)
+        public static function import_file(stdClass $course, $ident_field, /*$role_id, $group_assign,*/ $group_id, $group_create, stored_file $import_file)
         {
             global $DB;
 
@@ -227,7 +227,10 @@
             // If doing group assignments, want to know the valid
             // groups for the course
             $selected_group = null;
-            if ($group_assign) {
+            
+            
+          /* take out condition here,it is always group assign! */  
+            //if ($group_assign) {
 
                 if (false === ($existing_groups = groups_get_all_groups($course->id))) {
                     $existing_groups = array();
@@ -242,7 +245,7 @@
                     }
                 }
 
-            }
+           // }
 
             // Iterate the list of active enrol plugins looking for
             // the meta course plugin
@@ -311,7 +314,7 @@
 
                 // If no group assignments, or group is from file, but no
                 // group found, next line
-                if (!$group_assign ||($group_id == 0 && empty($group_name))) continue;
+                if (/*!$group_assign ||(*/$group_id == 0 && empty($group_name))/*)*/ continue;
 
                 // If no group pre-selected, see if group from import already
                 // created for that course
