@@ -28,33 +28,41 @@
  * @package     local_batchgroup
  */
 
-defined('MOODLE_INTERNAL') || die(); //obligatory
+defined('MOODLE_INTERNAL') || die();
 
 
 $string['pluginname']               = 'Batch Add Users to Groups';
+
 $string['IMPORT_MENU_LONG']         = 'Batch Add Users to Groups';
 $string['IMPORT_MENU_SHORT']        = 'Import';
+
 $string['LBL_IMPORT_TITLE']         = 'Import Group List file';
+
 $string['LBL_IMPORT']               = 'Import';
 $string['LBL_IDENTITY_OPTIONS']     = 'User Identity';
+/*$string['LBL_ENROLL_OPTIONS']       = 'Enrolment Options';*/
 $string['LBL_GROUP_OPTIONS']        = 'Group Options';
 $string['LBL_FILE_OPTIONS']         = 'Import File';
 $string['LBL_FILE_OPTIONS_help']    = 'Upload or pick from a repository a delimited data file with group allocation of enrolled users. File should have either a .txt or .csv extension.';
+/*$string['LBL_ROLE_ID']              = 'Role:';
+$string['LBL_ROLE_ID_help']         = 'What role do you want the imported users to have in the course. If \'No Enrollment\' then only group assignments will be made.';*/
 $string['LBL_USER_ID_FIELD']        = 'User field:';
 $string['LBL_USER_ID_FIELD_help']   = 'Specify which field in the user record is represented in the first column of the import file.';
+/*$string['LBL_GROUP']                = 'Assign to groups:';*/
 $string['LBL_GROUP_help']           = 'Make groups assignments, either based on file input, or a selected group.';
 $string['LBL_GROUP_ID']             = 'Use group:';
 $string['LBL_GROUP_ID_help']        = 'Choose to use the group name in input file, if supplied, or select an existing group and ignore the input data.';
 $string['LBL_GROUP_CREATE']         = 'Create groups:';
 $string['LBL_GROUP_CREATE_help']    = 'If groups in import file do not exist, create new ones as needed, otherwise only assign users to groups if the group name specified already exists.';
+/*$string['LBL_NO_ROLE_ID']           = 'No Enrolments';*/
 $string['LBL_NO_GROUP_ID']          = 'Use file data';
+
 $string['VAL_NO_FILES']             = 'No file was selected for import';
 $string['VAL_INVALID_SELECTION']    = 'Invalid selection';
 $string['VAL_INVALID_FORM_DATA']    = 'Invalid form data submission.';
-$string['INF_METACOURSE_WARN']      = '<b>WARNING</b>: You can not import enrolments directly into a metacourse. Instead, make enrolments into one of its child courses.<br /><br />';
-$string['INF_IMPORT_SUCCESS']       = 'Import complete';
 
-/*$string['ERR_NO_MANUAL_ENROL']      = "Course must have Manual enrol plugin enabled.";*/
+$string['INF_METACOURSE_WARN']      = '<b>WARNING</b>: You can not import enrolments directly into a metacourse. Instead, make enrolments into one of its child courses.<br /><br />';
+$string['INF_IMPORT_SUCCESS']       = 'Import complete. Continue to review group allocations.';
 $string['ERR_NO_META_ENROL']        = "Course must have 'Course meta link' enrol plugin enabled.";
 $string['ERR_PATTERN_MATCH']        = "Line %u: Unable to parse the line contents '%s'\n";
 $string['ERR_INVALID_GROUP_ID']     = "The group id %u is invalid for this course.\n";
@@ -63,9 +71,12 @@ $string['ERR_ENROLL_FAILED']        = "Line %u: Unable to create role assignment
 $string['ERR_NOT_ENROLLED_FAILED']  = "Line %u: User '%s' not enrolled \n";
 $string['ERR_ENROLL_META']          = "Line %u: No existing enrolment in metacourse for userid '%s'\n";
 $string['ERR_CREATE_GROUP']         = "Line %u: Unable to create group '%s'\n";
+$string['ERR_CREATE_GROUP2']        = "Line %u: Listed group '%s' does not pre-exist, and group creation was not enabled \n";
 $string['ERR_GROUP_MEMBER']         = "Line %u: Unable to add user '%s' to group '%s'\n";
 $string['ERR_USER_MULTIPLE_RECS']   = "Line %u: User ID value '%s' not unique. Multiple records found\n";
+
 $string['HELP_PAGE_IMPORT']         = 'Batch Allocate users to Groups';
+$string['ERR_CONTINUE_MSG']        	= '<p>Continue to review if any group allocations were successful.</p>';
 $string['HELP_PAGE_IMPORT_help']    = '
 <p>
 Allocate users to groups from a delimited text
@@ -93,17 +104,30 @@ userid specified is already associated with the metacourse via a child course
 enrolment.
 </p>
 
-<h3>Example CSV file format</h3>
+<h3>Examples</h3>
 
-
+Internal idnumber value and group
 <pre>
-astudent001,Group_A
-astudent002,Group_A
-astudent003,Group_B
-astudent004,Group_B
+2144323548;Tuesday Laborary
+2144323623
+2144323647;Wednesday Laborary
+2144323638;Wednesday Laborary
+</pre>
+
+E-mail addresses
+<pre>
+smith-john@university.edu
+janedoe@university.edu, "Honors"
+alan.jones@university.edu, "HonorsPlus"
+</pre>
+
+Usernames (separated from group field with a tab character)
+<pre>
+johnsonf    "Presentation, Group One"
+samsel      Ten O\'Clock Testing
 </pre>';
 
 /*
 * GDPR compliant
 */
-$string['privacy:no_data_reason'] = "The Batch Add Users to Groups plugin doesn't store any personal data.";
+$string['privacy:no_data_reason'] = "The Batch Allocate users to Groups plugin doesn't store any personal data.";
