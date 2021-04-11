@@ -52,7 +52,9 @@ $string['VAL_NO_FILES']             = 'No file was selected for import';
 $string['VAL_INVALID_SELECTION']    = 'Invalid selection';
 $string['VAL_INVALID_FORM_DATA']    = 'Invalid form data submission.';
 $string['INF_METACOURSE_WARN']      = '<b>WARNING</b>: You can not import enrolments directly into a metacourse. Instead, make enrolments into one of its child courses.<br /><br />';
-$string['INF_IMPORT_SUCCESS']       = 'Import complete. Continue to review group allocations.';
+$string['INF_IMPORT_SUCCESS']       = 'Import complete';
+
+/*$string['ERR_NO_MANUAL_ENROL']      = "Course must have Manual enrol plugin enabled.";*/
 $string['ERR_NO_META_ENROL']        = "Course must have 'Course meta link' enrol plugin enabled.";
 $string['ERR_PATTERN_MATCH']        = "Line %u: Unable to parse the line contents '%s'\n";
 $string['ERR_INVALID_GROUP_ID']     = "The group id %u is invalid for this course.\n";
@@ -61,11 +63,9 @@ $string['ERR_ENROLL_FAILED']        = "Line %u: Unable to create role assignment
 $string['ERR_NOT_ENROLLED_FAILED']  = "Line %u: User '%s' not enrolled \n";
 $string['ERR_ENROLL_META']          = "Line %u: No existing enrolment in metacourse for userid '%s'\n";
 $string['ERR_CREATE_GROUP']         = "Line %u: Unable to create group '%s'\n";
-$string['ERR_CREATE_GROUP2']        = "Line %u: Listed group '%s' does not pre-exist, and group creation was not enabled \n";
 $string['ERR_GROUP_MEMBER']         = "Line %u: Unable to add user '%s' to group '%s'\n";
 $string['ERR_USER_MULTIPLE_RECS']   = "Line %u: User ID value '%s' not unique. Multiple records found\n";
 $string['HELP_PAGE_IMPORT']         = 'Batch Allocate users to Groups';
-$string['ERR_CONTINUE_MSG']        	= '<p>Continue to review if any group allocations were successful.</p>';
 $string['HELP_PAGE_IMPORT_help']    = '
 <p>
 Allocate users to groups from a delimited text

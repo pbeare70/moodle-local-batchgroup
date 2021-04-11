@@ -34,9 +34,18 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin             = new stdClass();
 
+<<<<<<< HEAD
 $plugin->version    = 2021040502; 
 $plugin->requires   = 2017111300;
 $plugin->release    = 2021040502;
 $plugin->component  = 'local_batchgroup';
 $plugin->cron       = 0;
 $plugin->maturity   = MATURITY_ALPHA;
+=======
+    $plugin->version    = 2021040501; 
+    $plugin->requires   = 2017111300;
+    $plugin->release    = 2021040501;
+    $plugin->component  = 'local_batchgroup';
+    $plugin->cron       = 0;
+    $plugin->maturity   = MATURITY_ALPHA;
+>>>>>>> parent of a2c1f74... Error mesages working
