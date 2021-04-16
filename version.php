@@ -34,7 +34,7 @@
 
     $plugin             = new stdClass();
 
-    $plugin->version    = 2021040502; 
+    $plugin->version    = 2021041601; 
     $plugin->requires   = 2017111300;
     $plugin->release    = 2021040502;
     $plugin->component  = 'local_batchgroup';

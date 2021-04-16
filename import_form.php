@@ -128,34 +128,18 @@
                 || !array_key_exists($data[local_batchgroup_plugin::FORMID_USER_ID_FIELD], local_batchgroup_plugin::get_user_id_field_options())) {
                 $result[local_batchgroup_plugin::FORMID_USER_ID_FIELD] = get_string('invaliduserfield', 'error', $data[local_batchgroup_plugin::FORMID_USER_ID_FIELD]);
             }
-
- 
-            /*$group_assign = empty($data[local_batchgroup_plugin::FORMID_GROUP])
-                          ? 0 : intval($data[local_batchgroup_plugin::FORMID_GROUP]);
-            if (/*$group_assign < 0 or $group_assign > 1) {
-                $result[local_batchgroup_plugin::FORMID_GROUP] = get_string('VAL_INVALID_SELECTION', local_batchgroup_plugin::PLUGIN_NAME);
-            }*/
-
-            //if ($group_assign) {
-            //$group_id = empty($data[local_batchgroup_plugin::FORMID_GROUP_ID])
-            //            ? 0 : $group_assign ? intval($data[local_userenrols_plugin::FORMID_GROUP_ID]) : 0; //problem line
-            //}
-            //else {
-            //    $group_id = 0;
-            //}
             
             $group_id = intval($data[local_batchgroup_plugin::FORMID_GROUP_ID]); //replaced line
             if ($group_id > 0 && !array_key_exists($group_id, groups_get_all_groups($this->_customdata['data']->course->id))) {
                 $group_id = 0;
                 $result[local_batchgroup_plugin::FORMID_GROUP_ID] = get_string('VAL_INVALID_SELECTION', local_batchgroup_plugin::PLUGIN_NAME);
             }
-
-            // For Yes/No select 1 and 0 only, anything else not valid
-            //if (($group_assign && ($group_id == 0))) {
+            
+            //see if new groups should be created
 			if ($group_id == 0){	
                 $group_create = empty($data[local_batchgroup_plugin::FORMID_GROUP_CREATE])
                               ? 0 : $data[local_batchgroup_plugin::FORMID_GROUP_CREATE];
-            } else {
+            } else { //or not
                 $group_create = 0;
             }
             if ($group_create < 0 or $group_create > 1) {
