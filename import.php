@@ -15,18 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  batchgroup
+ * batchgroup
  *
- *  This plugin will import group assignments
- *  from a delimited text file. It does not create new user accounts
- *  in Moodle, or enrol users in a course.
+ * This plugin will import group assignments
+ * from a delimited text file. It does not create new user accounts
+ * in Moodle, or enrol users in a course.
  *
  * @author      Peter Beare
  * @copyright   (c) Peter Beare
  * @license     GNU General Public License version 3
  * @package     local_batchgroup
- * 
- * Adapted from local_userenrols by Fred Woolard
+ *
+ *Adapted from local_userenrols by Fred Woolard
  */
 
 require_once(__DIR__ . '/../../config.php');
@@ -64,88 +64,88 @@ $PAGE->set_cacheable(false);
 // GET or POST, but the form will be used in either case.
 
 // Fix up our customdata object to pass to the form constructor
-$data                   = new stdClass();
+$data       = new stdClass();
 $data->course           = $COURSE;
 $data->context          = $PAGE->context;
 $data->user_id_field_options
-       	= local_batchgroup_plugin::get_user_id_field_options();
+           = local_batchgroup_plugin::get_user_id_field_options();
 $data->metacourse       = false;
 $data->canmanagegroups  = $canmanagegroups;
-
+    
 
 // Iterate the list of active enrol plugins looking for
 // the meta course plugin
 reset($enrolsenabled);
-foreach($enrolsenabled as $enrol) {
-            	if ($enrol->enrol == 'meta') {
-            	            	$data->metacourse = true;
-            	            	$data->default_role_id = 0;
-            	            	break;
-            	}
+foreach ($enrolsenabled as $enrol) {
+    if ($enrol->enrol == 'meta') {
+        $data->metacourse = true;
+        $data->default_role_id = 0;
+        break;
+    }
 }
 
 // Set some options for the filepicker
 $filepickeroptions = array(
-            	'accepted_types' => array('.csv','.txt'),
-            	'maxbytes'       => local_batchgroup_plugin::MAXFILESIZE);
+    'accepted_types' => array('.csv','.txt'),
+    'maxbytes'       => local_batchgroup_plugin::MAXFILESIZE);
 
 $formdata = null;
 $mform    = new local_batchgroup_index_form($PAGE->url->out(), array('data' => $data, 'options' => $filepickeroptions));
 
 if ($mform->is_cancelled()) {
 
-            	// POST request, but cancel button clicked, or formdata not
-            	// valid. Either event, clear out draft file area to remove
-            	// unused uploads, then send back to course view
-            	get_file_storage()->delete_area_files($usercontext->id, 'user', 'draft', file_get_submitted_draft_itemid(local_batchgroup_plugin::FORMID_FILES));
-            	redirect($courseurl);
+    // POST request, but cancel button clicked, or formdata not
+    // valid. Either event, clear out draft file area to remove
+    // unused uploads, then send back to course view
+    get_file_storage()->delete_area_files($usercontext->id, 'user', 'draft', file_get_submitted_draft_itemid(local_batchgroup_plugin::FORMID_FILES));
+    redirect($courseurl);
 
-} elseif (!$mform->is_submitted() || null == ($formdata = $mform->get_data())) {
+} else if (!$mform->is_submitted() || null == ($formdata = $mform->get_data())) {
 
-            	// GET request, or POST request where data did not
-            	// pass validation, either case display the form
-            	echo $OUTPUT->header();
-            	echo $OUTPUT->heading_with_help(get_string('LBL_IMPORT_TITLE', local_batchgroup_plugin::PLUGIN_NAME), 'HELP_PAGE_IMPORT', local_batchgroup_plugin::PLUGIN_NAME);
+    // GET request, or POST request where data did not
+    // pass validation, either case display the form
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading_with_help(get_string('LBL_IMPORT_TITLE', local_batchgroup_plugin::PLUGIN_NAME), 'HELP_PAGE_IMPORT', local_batchgroup_plugin::PLUGIN_NAME);
 
-            	// Display the form with a filepicker
-            	echo $OUTPUT->container_start();
-            	$mform->display();
-            	echo $OUTPUT->container_end();
+    // Display the form with a filepicker
+    echo $OUTPUT->container_start();
+    $mform->display();
+    echo $OUTPUT->container_end();
 
-            	echo $OUTPUT->footer();
+    echo $OUTPUT->footer();
 
 } else {
 
-            	// POST request, submit button clicked and formdata
-            	// passed validation, first check session spoofing
-            	require_sesskey();
+    // POST request, submit button clicked and formdata
+    // passed validation, first check session spoofing
+    require_sesskey();
 
-            	// Collect the input
-            	$useridfield  = empty($formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD})
-            	            	            	            	            	? '' : $formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD};
-            	$groupid       = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID})
-            	            	            	            	            	? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID});
-            	$groupcreate   = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_CREATE})
-            	            	            	            	            	? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP_CREATE});
+    // Collect the input
+    $useridfield  = empty($formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD})
+                    ? '' : $formdata->{local_batchgroup_plugin::FORMID_USER_ID_FIELD};
+    $groupid       = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID})
+                    ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP_ID});
+    $groupcreate   = empty($formdata->{local_batchgroup_plugin::FORMID_GROUP_CREATE})
+                    ? 0 : intval($formdata->{local_batchgroup_plugin::FORMID_GROUP_CREATE});
 
-            	// Leave the file in the user's draft area since we
-            	// will not plan to keep it after processing
-            	$areafiles = get_file_storage()->get_area_files($usercontext->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES}, null, false);
-            	
-            	
-            	//process form date via lib.php
-            	$result = local_batchgroup_plugin::import_file($COURSE, $useridfield, $groupid, (boolean)$groupcreate, array_shift($areafiles));
+    // Leave the file in the user's draft area since we
+    // will not plan to keep it after processing
+    $areafiles = get_file_storage()->get_area_files($usercontext->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES}, null, false);
+    
+    
+    //process form date via lib.php
+    $result = local_batchgroup_plugin::import_file($COURSE, $useridfield, $groupid, (boolean)$groupcreate, array_shift($areafiles));
 
-            	// Clean up the file area
-            	get_file_storage()->delete_area_files($usercontext->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES});
+    // Clean up the file area
+    get_file_storage()->delete_area_files($usercontext->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES});
 
-            	echo $OUTPUT->header();
-            	echo $OUTPUT->heading_with_help(get_string('LBL_IMPORT_TITLE', local_batchgroup_plugin::PLUGIN_NAME), 'HELP_PAGE_IMPORT', local_batchgroup_plugin::PLUGIN_NAME);
+    echo $OUTPUT->header();
+    echo $OUTPUT->heading_with_help(get_string('LBL_IMPORT_TITLE', local_batchgroup_plugin::PLUGIN_NAME), 'HELP_PAGE_IMPORT', local_batchgroup_plugin::PLUGIN_NAME);
 
-            	// Output the processing result
-            	echo $OUTPUT->box(nl2br($result));
-            	echo $OUTPUT->continue_button($canmanagegroups ? $$groupsurl : $$enrolurl);
+    // Output the processing result
+    echo $OUTPUT->box(nl2br($result));
+    echo $OUTPUT->continue_button($canmanagegroups ? $$groupsurl : $$enrolurl);
 
-            	echo $OUTPUT->footer();
+    echo $OUTPUT->footer();
 
 }
