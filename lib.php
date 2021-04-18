@@ -188,16 +188,13 @@ class local_batchgroup_plugin
         switch($identfield)
         {
             case 'email':
-                $regexpattern = '/^"?\s*([a-z0-9][\w.%-]* @[a-z0-9][a-z0-9.-]{0,61}
-                    [a-z0-9]\.[a-z]{2,6})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*([a-z0-9][\w.%-]* @[a-z0-9][a-z0-9.-]{0,61}[a-z0-9]\.[a-z]{2,6})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
             case 'idnumber':
-                $regexpattern = '/^"?\s*(\d{1,32})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9]
-                    [\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*(\d{1,32})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
             default:
-                $regexpattern = '/^"?\s*([a-z0-9][\w@.-]*)\s*"?(?:\s*
-                    [;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*([a-z0-9][\w@.-]*)\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
         }
 
@@ -249,7 +246,6 @@ class local_batchgroup_plugin
                 $result .= sprintf(get_string('ERR_PATTERN_MATCH', self::PLUGIN_NAME), $linenum, $line);
                 continue;
             }
-
             $identvalue    = $matches[1];
             $groupname     = isset($matches[2]) ? $matches[2] : '';
 

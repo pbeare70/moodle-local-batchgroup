@@ -29,17 +29,7 @@
  * local_batchgroup differs in that it does not provide the option to enrol users.
  */
 
-require_once(__DIR__ . '/../../config.php');
 require_once($CFG->libdir.'/formslib.php');
-
-// Fetch the course id from query string.
-$courseid = required_param('id', PARAM_INT);
-
-// No anonymous access for this page, and this will.
-// handle bogus course id values as well.
-require_login($courseid);
-
-
 
 /**
  * Form definition for the plugin

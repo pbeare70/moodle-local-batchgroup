@@ -30,7 +30,7 @@
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php'); // This will bring in MOODLE_INTERNAL too.
+require_once(__DIR__ . '/lib.php');
 require_once(__DIR__ . '/import_form.php');
 
 
@@ -49,8 +49,8 @@ $usercontext = context_user::instance($USER->id);
 
 // Want this for subsequent print_error() calls.
 $courseurl = new moodle_url("{$CFG->wwwroot}/course/view.php", array('id' => $COURSE->id));
-$$groupsurl = new moodle_url("{$CFG->wwwroot}/group/index.php", array('id' => $COURSE->id));
-$$enrolurl  = new moodle_url("{$CFG->wwwroot}/user/index.php",  array('id' => $COURSE->id));
+$groupsurl = new moodle_url("{$CFG->wwwroot}/group/index.php", array('id' => $COURSE->id));
+$enrolurl  = new moodle_url("{$CFG->wwwroot}/user/index.php",  array('id' => $COURSE->id));
 
 $pageheadtitle = get_string('LBL_IMPORT_TITLE', local_batchgroup_plugin::PLUGIN_NAME) . ' : ' . $COURSE->shortname;
 
@@ -146,7 +146,7 @@ if ($mform->is_cancelled()) {
 
     // Output the processing result.
     echo $OUTPUT->box(nl2br($result));
-    echo $OUTPUT->continue_button($canmanagegroups ? $$groupsurl : $$enrolurl);
+    echo $OUTPUT->continue_button($canmanagegroups ? $groupsurl : $enrolurl);
 
     echo $OUTPUT->footer();
 
