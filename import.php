@@ -26,11 +26,11 @@
  * @license     GNU General Public License version 3
  * @package     local_batchgroup
  *
- *Adapted from local_userenrols by Fred Woolard
+ * Adapted from local_userenrols by Fred Woolard
  */
 
 require_once(__DIR__ . '/../../config.php');
-require_once(__DIR__ . '/lib.php');
+require_once(__DIR__ . '/lib.php'); // this will bring in MOODLE_INTERNAL too
 require_once(__DIR__ . '/import_form.php');
 
 
@@ -71,7 +71,6 @@ $data->user_id_field_options
            = local_batchgroup_plugin::get_user_id_field_options();
 $data->metacourse       = false;
 $data->canmanagegroups  = $canmanagegroups;
-    
 
 // Iterate the list of active enrol plugins looking for
 // the meta course plugin
@@ -86,7 +85,7 @@ foreach ($enrolsenabled as $enrol) {
 
 // Set some options for the filepicker
 $filepickeroptions = array(
-    'accepted_types' => array('.csv','.txt'),
+    'accepted_types' => array('.csv', '.txt'),
     'maxbytes'       => local_batchgroup_plugin::MAXFILESIZE);
 
 $formdata = null;
@@ -131,9 +130,8 @@ if ($mform->is_cancelled()) {
     // Leave the file in the user's draft area since we
     // will not plan to keep it after processing
     $areafiles = get_file_storage()->get_area_files($usercontext->id, 'user', 'draft', $formdata->{local_batchgroup_plugin::FORMID_FILES}, null, false);
-    
-    
-    //process form date via lib.php
+
+    // process form date via lib.php
     $result = local_batchgroup_plugin::import_file($COURSE, $useridfield, $groupid, (boolean)$groupcreate, array_shift($areafiles));
 
     // Clean up the file area

@@ -68,7 +68,7 @@ $string['ERR_CREATE_GROUP2']        = "Line %u: Listed group '%s' does not pre-e
 $string['ERR_GROUP_MEMBER']         = "Line %u: Unable to add user '%s' to group '%s'\n";
 $string['ERR_USER_MULTIPLE_RECS']   = "Line %u: User ID value '%s' not unique. Multiple records found\n";
 $string['HELP_PAGE_IMPORT']         = 'Batch Allocate users to Groups';
-$string['ERR_CONTINUE_MSG']        	= '<p>Some errors occured, so continue to check if any group allocations suceeded.</p>';
+$string['ERR_CONTINUE_MSG']         = '<p>Some errors occured, so continue to check if any group allocations suceeded.</p>';
 $string['HELP_PAGE_IMPORT_help']    = '
 <p>
 Allocate users to groups from a delimited text

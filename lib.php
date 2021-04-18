@@ -26,7 +26,7 @@
  * @license     GNU General Public License version 3
  * @package     local_batchgroup
  *
- *Adapted from local_userenrols by Fred Woolard
+ * Adapted from local_userenrols by Fred Woolard
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -38,33 +38,32 @@ require_once("{$CFG->dirroot}/lib/navigationlib.php");
 require_once("{$CFG->dirroot}/group/lib.php");
 
 /**
- *Hook to insert a link in settings navigation menu block
+ * Hook to insert a link in settings navigation menu block
  *
  * @param settings_navigation $navigation
  * @param course_context      $context
  * @return void
  */
-function local_batchgroup_extend_settings_navigation(settings_navigation $navigation, $context)
-{
-           global $CFG;
+function local_batchgroup_extend_settings_navigation(settings_navigation $navigation, $context) {
+    global $CFG;
 
-           // If not in a course context, then leave
-           if ($context == null || $context->contextlevel != CONTEXT_COURSE) {
-          return;
-}
+    // If not in a course context, then leave
+    if ($context == null || $context->contextlevel != CONTEXT_COURSE) {
+        return;
+    }
 
     // When on front page there is 'frontpagesettings' node, other
     // courses will have 'courseadmin' node
-    if (null == ($courseadmin_node = $navigation->get('courseadmin'))) {
+    if (null == ($courseadminnode = $navigation->get('courseadmin'))) {
         // Keeps us off the front page
         return;
     }
-    if (null == ($useradmin_node = $courseadmin_node->get('users'))) {
+    if (null == ($useradminnode = $courseadminnode->get('users'))) {
         return;
     }
 
     // Add our link
-    $useradmin_node->add(
+    $useradminnode->add(
         get_string('IMPORT_MENU_LONG', local_batchgroup_plugin::PLUGIN_NAME),
         new moodle_url("{$CFG->wwwroot}/local/batchgroup/import.php", array('id' => $context->instanceid)),
         navigation_node::TYPE_SETTING,
@@ -74,149 +73,147 @@ function local_batchgroup_extend_settings_navigation(settings_navigation $naviga
 }
 
 /**
- *The local plugin class
+ * The local plugin class
  */
 class local_batchgroup_plugin
 {
 
     /*
-     *Class constants
+     * Class constants
      */
 
     /**
-     *const string    Reduce chance of typos.
+     * const string    Reduce chance of typos.
      */
     const PLUGIN_NAME     = 'local_batchgroup';
 
     /**
-     *const string    Where we put the uploaded files.
+     * const string    Where we put the uploaded files.
      */
     const PLUGIN_FILEAREA             = 'uploads';
 
     /**
-     *const int       Max size of upload file.
+     * const int       Max size of upload file.
      */
     const MAXFILESIZE     = 51200;
 
     /**
-     *const string    Form id for user_id (key field to match).
+     * const string    Form id for user_id (key field to match).
      */
     const FORMID_USER_ID_FIELD        = 'user_id';
 
     /**
-     *const string    Form id for group_id (direct assignment).
+     * const string    Form id for group_id (direct assignment).
      */
     const FORMID_GROUP_ID             = 'group_id';
 
     /**
-     *const string    Form id for group_create (if specified group missing).
+     * const string    Form id for group_create (if specified group missing).
      */
     const FORMID_GROUP_CREATE         = 'group_create';
 
     /**
-     *const string    Form id for filepicker form element.
+     * const string    Form id for filepicker form element.
      */
     const FORMID_FILES    = 'filepicker';
 
     /**
-     *const string    Form id for metacourse (hidden indicator).
+     * const string    Form id for metacourse (hidden indicator).
      */
     const FORMID_METACOURSE           = 'metacourse';
 
     /**
-     *const string    Default user_id form value (key field to match).
+     * const string    Default user_id form value (key field to match).
      */
     const DEFAULT_USER_ID_FIELD       = 'username';
 
     /*
-     *Member vars
+     * Member vars
      */
 
     /**
      * @var array
      */
-    private static $useridfield_options    = null;
+    private static $useridfieldoptions = null;
 
     /*
-     *Methods
+     * Methods
      */
 
     /**
-     *Return list of valid options for user record field matching
+     * Return list of valid options for user record field matching
      *
      * @return array
      */
-    public static function get_user_id_field_options()
-    {
+    public static function get_user_id_field_options() {
 
-        if (self::$useridfield_options == null) {
-            self::$useridfield_options = array(
+        if (self::$useridfieldoptions == null) {
+            self::$useridfieldoptions = array(
                 'username' => get_string('username'),
                 'email'    => get_string('email'),
                 'idnumber' => get_string('idnumber')
             );
         }
 
-        return self::$useridfield_options;
+        return self::$useridfieldoptions;
 
     }
 
     /**
-     *Make a role assignment in the specified course using the specified role
-     *id for the user whose id information is passed in the line data.
+     * Make a role assignment in the specified course using the specified role
+     * id for the user whose id information is passed in the line data.
      *
      * @param stdClass      $course           Course in which to make the role assignment
      * @param stdClass      $enrol_instance   Enrol instance to use for adding users to course
-     * @param string        $ident_field      The field (column) name in Moodle user rec against which to query using the imported data
+     * @param string        $identfield      The field (column) name in Moodle user rec against which to query using the imported data
      * @param int           $role_id          Id of the role to use in the role assignment
-     * @param boolean       $group_assign     Whether or not to assign users to groups
+     * @param boolean       $groupassign     Whether or not to assign users to groups
      * @param int           $groupid         Id of group to assign to, 0 indicates use group name from import file
      * @param boolean       $groupcreate     Whether or not to create new groups if needed
-     * @param stored_file   $import_file      File in local repository from which to get enrollment and group data
+     * @param stored_file   $importfile      File in local repository from which to get enrollment and group data
      * @return string             String message with results
      *
      * @uses $DB
      */
-    public static function import_file(stdClass $course, $ident_field, $groupid, $groupcreate, stored_file $import_file)
-    {
+    public static function import_file(stdClass $course, $identfield, $groupid, $groupcreate, stored_file $importfile) {
         global $DB;
 
         // Default return value
         $result = '';
 
         // Need one of these in the loop
-        $course_context = context_course::instance($course->id);
+        $coursecontext = context_course::instance($course->id);
 
-        // Choose the regex pattern based on the $ident_field
-        switch($ident_field)
+        // Choose the regex pattern based on the $identfield
+        switch($identfield)
         {
             case 'email':
-                $regex_pattern = '/^"?\s*([a-z0-9][\w.%-]* @[a-z0-9][a-z0-9.-]{0,61}[a-z0-9]\.[a-z]{2,6})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*([a-z0-9][\w.%-]* @[a-z0-9][a-z0-9.-]{0,61}[a-z0-9]\.[a-z]{2,6})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
             case 'idnumber':
-                $regex_pattern = '/^"?\s*(\d{1,32})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*(\d{1,32})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
             default:
-                $regex_pattern = '/^"?\s*([a-z0-9][\w@.-]*)\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*([a-z0-9][\w@.-]*)\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
         }
 
         // If doing group assignments, want to know the valid
         // groups for the course
-        $selected_group = null;
+        $selectedgroup = null;
 
-            if (false === ($existing_groups = groups_get_all_groups($course->id))) {
-                $existing_groups = array();
-            }
+        if (false === ($existinggroups = groups_get_all_groups($course->id))) {
+            $existinggroups = array();
+        }
 
-            if ($groupid > 0) {
-                if (array_key_exists($groupid, $existing_groups)) {
-                    $selected_group = $existing_groups[$groupid];
-                } else {
-                    // Error condition
-                    return sprintf(get_string('ERR_INVALID_GROUP_ID', self::PLUGIN_NAME), $groupid);
-                }
+        if ($groupid > 0) {
+            if (array_key_exists($groupid, $existinggroups)) {
+                $selectedgroup = $existinggroups[$groupid];
+            } else {
+                // Error condition
+                return sprintf(get_string('ERR_INVALID_GROUP_ID', self::PLUGIN_NAME), $groupid);
             }
+        }
 
         // Iterate the list of active enrol plugins looking for
         // the meta course plugin
@@ -230,26 +227,26 @@ class local_batchgroup_plugin
         }
 
         // Open and fetch the file contents
-        $fh = $import_file->get_content_file_handle();
-        $line_num = 0;
+        $fh = $importfile->get_content_file_handle();
+        $linenum = 0;
         while (false !== ($line = fgets($fh))) {
-            $line_num++;
+            $linenum++;
 
             // Clean these up for each iteration
-            unset($user_rec, $new_group, $new_grouping);
+            unset($userrec, $newgroup, $newgrouping);
 
             if (!($line = trim($line))) continue;
 
             // Parse the line, from which we may get one or two
             // matches since the group name is an optional item
             // on a line by line basis
-            if (!preg_match($regex_pattern, $line, $matches)) {
-                $result .= sprintf(get_string('ERR_PATTERN_MATCH', self::PLUGIN_NAME), $line_num, $line);
+            if (!preg_match($regexpattern, $line, $matches)) {
+                $result .= sprintf(get_string('ERR_PATTERN_MATCH', self::PLUGIN_NAME), $linenum, $line);
                 continue;
             }
 
-            $ident_value    = $matches[1];
-            $group_name     = isset($matches[2]) ? $matches[2] : '';
+            $identvalue    = $matches[1];
+            $groupname     = isset($matches[2]) ? $matches[2] : '';
 
             // User must already exist, we import enrollments
             // into courses, not users into the system. Exclude
@@ -258,70 +255,70 @@ class local_batchgroup_plugin
             // returned when using that identifying field, so
             // use ->get_records method to make that detection
             // and inform user
-            $user_rec_array = $DB->get_records('user', array($ident_field => addslashes($ident_value), 'deleted' => 0));
+            $userrecarray = $DB->get_records('user', array($identfield => addslashes($identvalue), 'deleted' => 0));
             // Should have one and only one record, otherwise
             // report it and move on to the next
-            $user_rec_count = count($user_rec_array);
-            if ($user_rec_count == 0) {
+            $userreccount = count($userrecarray);
+            if ($userreccount == 0) {
                 // No record found
-                $result .= sprintf(get_string('ERR_USERID_INVALID', self::PLUGIN_NAME), $line_num, $ident_value);
+                $result .= sprintf(get_string('ERR_USERID_INVALID', self::PLUGIN_NAME), $linenum, $identvalue);
                 continue;
-            } else if ($user_rec_count > 1) {
+            } else if ($userreccount > 1) {
                 // Too many records
-                $result .= sprintf(get_string('ERR_USER_MULTIPLE_RECS', self::PLUGIN_NAME), $line_num, $ident_value);
+                $result .= sprintf(get_string('ERR_USER_MULTIPLE_RECS', self::PLUGIN_NAME), $linenum, $identvalue);
                 continue;
             }
 
-            $user_rec = array_shift($user_rec_array);
+            $userrec = array_shift($userrecarray);
 
             // Fetch all the role assignments this user might have for this course's context
-            $roles = get_user_roles($course_context, $user_rec->id, false);
+            $roles = get_user_roles($coursecontext, $userrec->id, false);
             // If a user has a role in this course, then we leave it alone and move on
-            // If they have no role, we add an error to the result output    
-            
+            // If they have no role, we add an error to the result output
+
             if (!$roles) { // if $roles is false
-            $result .= sprintf(get_string('ERR_NOT_ENROLLED_FAILED', self::PLUGIN_NAME), $line_num, $ident_value);
+                $result .= sprintf(get_string('ERR_NOT_ENROLLED_FAILED', self::PLUGIN_NAME), $linenum, $identvalue);
             }
 
             // If no group assignments, or group is from file, but no
             // group found, next line
-            if ($groupid == 0 && empty($group_name)) continue;
+            if ($groupid == 0 && empty($groupname)) continue;
 
             // If no group pre-selected, see if group from import already
             // created for that course
-            $assign_group_id = 0;
-            $assign_group_name = '';
-            if ($selected_group != null) {
+            $assigngroupid = 0;
+            $assigngroupname = '';
+            if ($selectedgroup != null) {
 
-                $assign_group_id   = $selected_group->id;
-                $assign_group_name = $selected_group->name;
+                $assigngroupid   = $selectedgroup->id;
+                $assigngroupname = $selectedgroup->name;
 
             } else {
-                
-                //create groups
-                foreach ($existing_groups as $existing_group) {
-                    if ($existing_group->name != $group_name)
+
+                // create groups
+                foreach ($existinggroups as $existinggroup) {
+                    if ($existinggroup->name != $groupname)
                         continue;
-                    $assign_group_id   = $existing_group->id;
-                    $assign_group_name = $existing_group->name;
+                    $assigngroupid   = $existinggroup->id;
+                    $assigngroupname = $existinggroup->name;
                     break;
                 }
 
                 // No group by that name
-                if ($assign_group_id == 0) {
+                if ($assigngroupid == 0) {
 
                     // Can not create one, next line
                     if (!$groupcreate) {
-                        $result .= sprintf(get_string('ERR_CREATE_GROUP2', self::PLUGIN_NAME), $line_num, $group_name);
+                        $result .= sprintf(get_string('ERR_CREATE_GROUP2', self::PLUGIN_NAME), $linenum, $groupname);
                         continue;
                     }
 
                     // Make a new group for this course
-                    $new_group = new stdClass();
-                    $new_group->name = addslashes($group_name);
-                    $new_group->courseid = $course->id;
-                    if (false === ($assign_group_id = groups_create_group($new_group))) {
-                        $result .= sprintf(get_string('ERR_CREATE_GROUP', self::PLUGIN_NAME), $line_num, $group_name);
+                    $newgroup = new stdClass();
+                    $newgroup->name = addslashes($groupname);
+                    $newgroup->courseid = $course->id;
+                    if (false === ($assigngroupid = groups_create_group($newgroup))) {
+                        $result .= sprintf(get_string('ERR_CREATE_GROUP', self::PLUGIN_NAME), $linenum, $groupname);
                         continue;
                     } else {
                         // Add the new group to our list for the benefit of
@@ -329,20 +326,20 @@ class local_batchgroup_plugin
                         // name since we do a name comparison earlier when
                         // trying to find the group in our local cache and
                         // an escaped semi-colon will cause the test to fail.
-                        $new_group->name   =
-                        $assign_group_name = stripslashes($new_group->name);
-                        $new_group->id = $assign_group_id;
-                        $existing_groups[] = $new_group;
+                        $newgroup->name   =
+                        $assigngroupname = stripslashes($newgroup->name);
+                        $newgroup->id = $assigngroupid;
+                        $existinggroups[] = $newgroup;
                     }
 
-                } // if ($assign_group_id == 0)
+                } // if ($assigngroupid == 0)
 
             }
 
             // Put the user in the group if not aleady in it
-            if (   !groups_is_member($assign_group_id, $user_rec->id)
-                && !groups_add_member($assign_group_id, $user_rec->id)) {
-                $result .= sprintf(get_string('ERR_GROUP_MEMBER', self::PLUGIN_NAME), $line_num, $ident_value, $assign_group_name);
+            if (   !groups_is_member($assigngroupid, $userrec->id)
+                && !groups_add_member($assigngroupid, $userrec->id)) {
+                $result .= sprintf(get_string('ERR_GROUP_MEMBER', self::PLUGIN_NAME), $linenum, $identvalue, $assigngroupname);
                 continue;
             }
 
