@@ -188,7 +188,8 @@ class local_batchgroup_plugin
         switch($identfield)
         {
             case 'email':
-                $regexpattern = '/^"?\s*([a-z0-9][\w.%-]* @[a-z0-9][a-z0-9.-]{0,61}[a-z0-9]\.[a-z]{2,6})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
+                $regexpattern = '/^"?\s*([a-z0-9][\w.%-]* @[a-z0-9][a-z0-9.-]{0,61}'; // append long string below.
+                $regexpattern .= '[a-z0-9]\.[a-z]{2,6})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';
                 break;
             case 'idnumber':
                 $regexpattern = '/^"?\s*(\d{1,32})\s*"?(?:\s*[;,\t]\s*"?\s*([a-z0-9][\w\' .,&-\[\]\{\}\(\)]*))?\s*"?$/Ui';

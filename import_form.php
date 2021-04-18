@@ -28,6 +28,7 @@
  * Adapted from local_userenrols by Fred Woolard
  * local_batchgroup differs in that it does not provide the option to enrol users.
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/formslib.php');
 
