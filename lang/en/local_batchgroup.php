@@ -15,17 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- *  batchgroup
+ * local_batchgroup
  *
- *  This plugin will import group assignments
- *  from a delimited text file. It does not create new user accounts
- *  in Moodle, or enrol users in a course.
+ * This plugin will batch allocate users to groups
+ * from a delimited text file (CSV·or·TXT).
  *
  * @author      Peter Beare
- * @copyright   2021 Peter Beare
- * @copyright   based on 'local_userenrols' by Fred Woolard <woolardfa@appstate.edu>(c) 2013 Appalachian State Universtiy, Boone, NC
+ * @copyright   (c) Peter Beare
  * @license     GNU General Public License version 3
  * @package     local_batchgroup
+ *
+ * Adapted from local_userenrols by Fred Woolard
+ * local_batchgroup differs in that it does not provide the option to enrol users.
  */
 
 defined('MOODLE_INTERNAL') || die();
